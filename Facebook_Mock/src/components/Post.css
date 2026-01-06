@@ -1,0 +1,96 @@
+.post {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 12px 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.post-header-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.post-author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.post-author-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #050505;
+  line-height: 1.33;
+}
+
+.post-time {
+  font-size: 13px;
+  color: #65676b;
+  line-height: 1.23;
+}
+
+.post-content {
+  margin-bottom: 8px;
+}
+
+.post-message {
+  font-size: 15px;
+  line-height: 1.33;
+  color: #050505;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.post-meta {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #e4e6eb;
+  margin-bottom: 4px;
+}
+
+.post-meta-counts {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #65676b;
+}
+
+.post-likes-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #e4e6eb;
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.post-action-btn {
+  flex: 1;
+  border: none;
+  background-color: transparent;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #65676b;
+  cursor: pointer;
+}
+
+.post-action-btn:hover {
+  background-color: #f0f2f5;
+}
+}

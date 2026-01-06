@@ -1,0 +1,54 @@
+.comments {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e4e6eb;
+}
+
+.comment {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.comment:last-child {
+  margin-bottom: 0;
+}
+
+.comment-content {
+  flex: 1;
+  background-color: #f0f2f5;
+  border-radius: 18px;
+  padding: 8px 12px;
+}
+
+.comment-author {
+  font-size: 13px;
+  font-weight: 600;
+  color: #050505;
+  margin-bottom: 2px;
+}
+
+.comment-text {
+  font-size: 15px;
+  color: #050505;
+  line-height: 1.33;
+  word-wrap: break-word;
+}
+
+.comments-more {
+  margin-top: 8px;
+}
+
+.comments-more-button {
+  background: none;
+  border: none;
+  color: #65676b;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.comments-more-button:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,62 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-error,
+.feed-empty,
+.feed-end {
+  text-align: center;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  color: #65676b;
+}
+
+.feed-error button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.feed-error button:hover {
+  background-color: #166fe5;
+}
+
+.feed-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e4e6eb;
+  border-top-color: #1877f2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.feed-loading p {
+  margin-top: 12px;
+  color: #65676b;
+  font-size: 15px;
+}
