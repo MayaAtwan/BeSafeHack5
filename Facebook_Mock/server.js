@@ -162,6 +162,21 @@ async function startServer() {
     return res.status(201).json({ success: true });
   });
 
+  /**
+ * GET /events
+ * Returns all saved events from MongoDB
+ */
+  app.get('/events', async (req, res) => {
+    try {
+      const events = await eventStore.getAllEvents();
+      res.json({ data: events });
+    } catch (err) {
+      console.error("❌ Failed to fetch events:", err);
+      res.status(500).json({ error: "Failed to fetch events" });
+    }
+  });
+
+
   // -------------------------
   // START SERVER
   // -------------------------

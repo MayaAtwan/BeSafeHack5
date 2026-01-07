@@ -18,5 +18,19 @@ module.exports = {
     } catch (err) {
       console.error("❌ Failed to save event:", err);
     }
+  },
+
+  async getAllEvents() {
+    if (!db) {
+      console.error("❌ DB not initialized");
+      return [];
+    }
+
+    try {
+      return await db.collection("events").find({}).toArray();
+    } catch (err) {
+      console.error("❌ Failed to read events:", err);
+      return [];
+    }
   }
 };
