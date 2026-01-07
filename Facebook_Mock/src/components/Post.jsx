@@ -3,7 +3,7 @@ import UserAvatar from './UserAvatar';
 import PostMedia from './PostMedia';
 import Comments from './Comments';
 import { formatPostTime } from '../utils/dateUtils';
-import { sendViewEvent } from '../utils/eventsApi';
+import { saveEventLocally } from "../client-data/eventStoreClient.js";
 import './Post.css';
 
 function Post({ post }) {
@@ -46,7 +46,13 @@ function Post({ post }) {
     }
   };
 
-  // שליחת אירוע צפייה
+  // Save event locally
+  function trackViewEvent(event) {
+    console.log("Saving event locally:", event);
+    saveEventLocally(event);
+  }
+
+  // Send view event locally
   const sendEvent = async (forceOpenedComments = null) => {
     if (!id) return;
 
@@ -67,9 +73,10 @@ function Post({ post }) {
       timestamp: Date.now(),
     };
 
-    await sendViewEvent(eventPayload);
+    // Save event locally
+    trackViewEvent(eventPayload);
 
-    // מסמן ששלחנו view — לא נשלח שוב
+    // Mark that we've sent the view event — don't send again
     if (forceOpenedComments === null) {
       hasSentViewEventRef.current = true;
     }

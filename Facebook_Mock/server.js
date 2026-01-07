@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const eventStore = require('./server-data/eventStore');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -134,9 +135,7 @@ app.get('/v17.0/me/home', (req, res) => {
 /**
  * POST /events/view
  */
-const EVENTS_PATH = path.join(__dirname, 'events.json');
-
-app.post('/events/view', (req, res) => {
+app.post('/events/view', async (req, res) => {
   const {
     userId,
     postId,
@@ -166,32 +165,8 @@ app.post('/events/view', (req, res) => {
     timestamp: Number(timestamp) || Date.now()
   };
 
-  // Load existing events (if any)
-  let events = [];
-  if (fs.existsSync(EVENTS_PATH)) {
-    try {
-      const raw = fs.readFileSync(EVENTS_PATH, 'utf-8');
-      events = JSON.parse(raw);
-      if (!Array.isArray(events)) {
-        events = [];
-      }
-    } catch (err) {
-      console.error('Failed to read events.json, resetting file:', err.message);
-      events = [];
-    }
-  }
-
-  events.push(event);
-
-  try {
-    fs.writeFileSync(EVENTS_PATH, JSON.stringify(events, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Failed to write events.json:', err.message);
-    return res.status(201).json({
-      success: true,
-      warning: 'Event received but failed to persist on server'
-    });
-  }
+  // DATA laayer - currently do nothing (Web Storage mode)
+  await eventStore.saveEvent(event);
 
   return res.status(201).json({ success: true });
 });
