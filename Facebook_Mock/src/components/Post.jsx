@@ -3,7 +3,6 @@ import UserAvatar from './UserAvatar';
 import PostMedia from './PostMedia';
 import Comments from './Comments';
 import { formatPostTime } from '../utils/dateUtils';
-import { saveEventLocally } from "../client-data/eventStoreClient.js";
 import './Post.css';
 
 function Post({ post }) {
@@ -18,26 +17,17 @@ function Post({ post }) {
 
   const postRef = useRef(null);
 
-  // האם כבר שלחנו view לפוסט הזה?
   const hasSentViewEventRef = useRef(false);
-
-  // מדידת זמן חשיפה
   const visibleStartRef = useRef(null);
   const totalVisibleMsRef = useRef(0);
-
-  // מדידת אחוז חשיפה מקסימלי
   const maxVisibleRatioRef = useRef(0);
-
-  // מדידת זמן צפייה בוידאו
   const videoWatchMsRef = useRef(0);
 
-  // האם המשתמש פתח תגובות
   const [openedComments, setOpenedComments] = useState(false);
   const hasSentCommentsEventRef = useRef(false);
 
   const postTime = created_time ? formatPostTime(created_time) : '';
 
-  // עוצר את מדידת הזמן ומוסיף אותו לסך הכול
   const finalizeVisibilityTime = () => {
     if (visibleStartRef.current !== null) {
       const now = performance.now();
@@ -46,13 +36,6 @@ function Post({ post }) {
     }
   };
 
-  // Save event locally
-  function trackViewEvent(event) {
-    console.log("Saving event locally:", event);
-    saveEventLocally(event);
-  }
-
-  // Send view event locally
   const sendEvent = async (forceOpenedComments = null) => {
     if (!id) return;
 
@@ -64,25 +47,32 @@ function Post({ post }) {
 
     const eventPayload = {
       userId: 'u1',
-      postId: id,
-      visiblePercentage,
-      durationMs: Math.round(totalVisibleMsRef.current),
-      videoWatchedMs: Math.round(videoWatchMsRef.current),
-      openedComments:
-        forceOpenedComments !== null ? forceOpenedComments : openedComments,
       timestamp: Date.now(),
+      post: post,
+      view: {
+        visiblePercentage,
+        durationMs: Math.round(totalVisibleMsRef.current),
+        videoWatchedMs: Math.round(videoWatchMsRef.current),
+        openedComments:
+          forceOpenedComments !== null ? forceOpenedComments : openedComments
+      }
     };
 
-    // Save event locally
-    trackViewEvent(eventPayload);
+    try {
+      await fetch('http://localhost:3000/events/view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventPayload)
+      });
+    } catch (err) {
+      console.error('Failed to send event to server:', err);
+    }
 
-    // Mark that we've sent the view event — don't send again
     if (forceOpenedComments === null) {
       hasSentViewEventRef.current = true;
     }
   };
 
-  // מעקב חשיפה — כמו פייסבוק
   useEffect(() => {
     const element = postRef.current;
     if (!element) return;
@@ -94,23 +84,18 @@ function Post({ post }) {
         const now = performance.now();
 
         if (entry.isIntersecting) {
-          // עדכון אחוז חשיפה מקסימלי
           if (ratio > maxVisibleRatioRef.current) {
             maxVisibleRatioRef.current = ratio;
           }
-
-          // התחלת מדידת זמן
           if (visibleStartRef.current === null) {
             visibleStartRef.current = now;
           }
         } else {
-          // הפוסט יצא מהמסך — עוצרים מדידה
           if (visibleStartRef.current !== null) {
             totalVisibleMsRef.current += now - visibleStartRef.current;
             visibleStartRef.current = null;
           }
 
-          // אם היה זמן חשיפה ועדיין לא שלחנו view — שולחים עכשיו
           if (!hasSentViewEventRef.current && totalVisibleMsRef.current > 0) {
             hasSentViewEventRef.current = true;
             sendEvent().catch(err =>
@@ -119,9 +104,7 @@ function Post({ post }) {
           }
         }
       },
-      {
-        threshold: [0, 0.25, 0.5, 0.75, 1.0],
-      }
+      { threshold: [0, 0.25, 0.5, 0.75, 1.0] }
     );
 
     observer.observe(element);
@@ -129,7 +112,6 @@ function Post({ post }) {
     return () => {
       observer.disconnect();
 
-      // אם הפוסט הוסר מהמסך ועדיין לא שלחנו view — שולחים עכשיו
       if (
         !hasSentViewEventRef.current &&
         (visibleStartRef.current !== null || totalVisibleMsRef.current > 0)
@@ -141,12 +123,10 @@ function Post({ post }) {
     };
   }, [id, openedComments]);
 
-  // עדכון זמן צפייה בוידאו
   const handleVideoWatchTimeChange = totalMs => {
     videoWatchMsRef.current = totalMs;
   };
 
-  // פתיחת תגובות
   const handleCommentsOpened = () => {
     if (!openedComments) {
       setOpenedComments(true);
@@ -216,15 +196,9 @@ function Post({ post }) {
       </div>
 
       <div className="post-actions">
-        <button type="button" className="post-action-btn">
-          לייק
-        </button>
-        <button type="button" className="post-action-btn">
-          תגובה
-        </button>
-        <button type="button" className="post-action-btn">
-          שיתוף
-        </button>
+        <button type="button" className="post-action-btn">לייק</button>
+        <button type="button" className="post-action-btn">תגובה</button>
+        <button type="button" className="post-action-btn">שיתוף</button>
       </div>
     </article>
   );

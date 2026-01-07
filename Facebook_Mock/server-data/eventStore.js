@@ -1,11 +1,22 @@
-// Modular data layer for event storage
-// Stage 1: no storage (Web Storage on client side)
-// Stage 2: replace with real implementation (Mongo / SQLite / Postgres)
+let db = null;
 
 module.exports = {
+  init(mongoDb) {
+    db = mongoDb;
+    console.log("📦 eventStore initialized with MongoDB");
+  },
+
   async saveEvent(event) {
-    // Stage 1: do nothing
-    // In the future: replace content here with real storage logic
-    console.log("Received event (ignored in Web Storage mode):", event);
+    if (!db) {
+      console.error("❌ DB not initialized");
+      return;
+    }
+
+    try {
+      await db.collection("events").insertOne(event);
+      console.log("📥 Event saved to MongoDB");
+    } catch (err) {
+      console.error("❌ Failed to save event:", err);
+    }
   }
 };
