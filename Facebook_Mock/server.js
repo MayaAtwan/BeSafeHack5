@@ -162,7 +162,7 @@ async function startServer() {
       });
     }
 
-    await eventStore.saveEvent(event);
+    await eventStore.eventLogic(event);
 
     return res.status(201).json({ success: true });
   });
@@ -190,6 +190,35 @@ async function startServer() {
       res.status(500).json({ error: "Failed to fetch analytics" });
     }
   });
+
+    /**
+   * GET /dashboard/:userId
+   * Returns stats for a specific user
+   */
+  app.get('/dashboard/:userId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      const stats = await userStatsStore.getStats(userId);
+
+      if (!stats) {
+        return res.status(404).json({ error: "No stats found for this user" });
+      }
+
+      res.json({
+        userId: stats.userId,
+        totalEvents: stats.totalEvents,
+        harmfulCount: stats.harmfulCount,
+        positiveCount: stats.positiveCount,
+        labelsCount: stats.labelsCount,
+        updatedAt: stats.updatedAt
+      });
+    } catch (err) {
+      console.error("❌ Failed to fetch dashboard stats:", err);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
 
   // -------------------------
   // START SERVER
