@@ -5,6 +5,8 @@ const path = require('path');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const eventStore = require('./server-data/eventStore');
+const postAnalyticsStore = require('./server-data/postAnalyticsStore');
+const userStatsStore = require('./server-data/userStatsStore');
 
 async function startServer() {
   const app = express();
@@ -39,6 +41,9 @@ async function startServer() {
 
     const db = client.db("facebook_mock");
     eventStore.init(db);
+    postAnalyticsStore.init(db);
+    userStatsStore.init(db);
+
   } catch (err) {
     console.error("❌ MongoDB connection failed:", err);
   }
@@ -176,6 +181,15 @@ async function startServer() {
     }
   });
 
+  app.get('/analytics', async (req, res) => {
+    try {
+      const analytics = await postAnalyticsStore.getAllAnalytics();
+      res.json({ data: analytics });
+    } catch (err) {
+      console.error("❌ Failed to fetch analytics:", err);
+      res.status(500).json({ error: "Failed to fetch analytics" });
+    }
+  });
 
   // -------------------------
   // START SERVER
