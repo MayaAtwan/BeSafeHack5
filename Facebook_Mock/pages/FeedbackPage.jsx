@@ -1,12 +1,23 @@
 import FeedbackHeader from "../src/components/FeedbackHeader";
+import SentimentPieChart from "../src/components/SentimentPieChart";
 
 function FeedbackPage() {
+    const positiveCount = 120;
+    const negativeCount = 45;
+
+    const sentimentData = [
+    { label: "Positive", value: positiveCount, color: "#29c54dff" },
+    { label: "Negative", value: negativeCount, color: "#db1d40ff" },
+    ];
+
   return (
     <div style={styles.page }>
         <FeedbackHeader/>
+        <div>
+        <h2 style={{textAlign: "center"}}>Your Content Sentiment</h2>
+        <SentimentPieChart data={sentimentData} />
+        </div>
 
-      <h2>Feedback</h2>
-      <p>Feedback analytics coming soon</p>
     </div>
   );
 }
