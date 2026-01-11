@@ -1,3 +1,4 @@
+import ContentCategoryBarChart from "../src/components/ContentCategoryBarChart";
 import FeedbackHeader from "../src/components/FeedbackHeader";
 import SentimentPieChart from "../src/components/SentimentPieChart";
 
@@ -10,13 +11,39 @@ function FeedbackPage() {
     { label: "Negative", value: negativeCount, color: "#db1d40ff" },
     ];
 
+        const categoriesData = [
+    {
+        category: "Violence",
+        value: 32,
+        color: "#ff4afcff",
+    },
+    {
+        category: "Hate Speech",
+        value: 21,
+        color: "#f68fffff",
+    },
+    {
+        category: "Spam",
+        value: 15,
+        color: "#aa519bff",
+    },
+    {
+        category: "Misinformation",
+        value: 12,
+        color: "#db39bbff",
+    },
+    ];
+
   return (
     <div style={styles.page }>
         <FeedbackHeader/>
         <div>
-        <h2 style={{textAlign: "center"}}>Your Content Sentiment</h2>
+        <h3 style={{textAlign: "center"}}>Your Content Sentiment</h3>
         <SentimentPieChart data={sentimentData} />
         </div>
+
+        <h3 style={{textAlign: "center"}}>What Kind of Harmful Content Appears in Your Feed</h3>    
+        <ContentCategoryBarChart data={categoriesData} />
 
     </div>
   );
