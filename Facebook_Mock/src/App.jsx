@@ -3,6 +3,7 @@ import { AiFillHome } from 'react-icons/ai';
 import { MdOndemandVideo, MdGroups } from 'react-icons/md';
 import Feed from './components/Feed';
 import './App.css';
+import FeedbackButton from './components/FeedbackButton';
 
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
           <aside className="app-main-side" aria-hidden="true" />
           <section className="app-main-center">
             <Feed />
+            <div className='feedback-button-container'>
+            <FeedbackButton/>
+            </div>
           </section>
           <aside className="app-main-side" aria-hidden="true" />
         </div>
