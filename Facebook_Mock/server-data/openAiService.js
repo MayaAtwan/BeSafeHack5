@@ -1,7 +1,26 @@
 const OpenAI = require("openai");
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Only initialize OpenAI if API key is available
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  try {
+    openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  } catch (err) {
+    console.warn("⚠️ OpenAI initialization failed:", err.message);
+  }
+}
 
 async function analyzeWithOpenAI(event) {
+  // Return early if OpenAI is not configured
+  if (!openai) {
+    console.warn("⚠️ OpenAI not configured, returning fallback analysis");
+    return {
+      is_harmful: false,
+      labels: ["אחר (חיובי)"],
+      explanation: "OpenAI not configured",
+      confidence: 0
+    };
+  }
   if (!event || !event.post) {
     throw new Error("Invalid event format for analysis");
   }

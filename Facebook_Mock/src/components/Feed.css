@@ -60,3 +60,59 @@
   color: #65676b;
   font-size: 15px;
 }
+
+.feed-controls {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.legitimacy-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #050505;
+}
+
+.legitimacy-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  background-color: #bcc0c4;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  outline: none;
+}
+
+.legitimacy-toggle:focus {
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+}
+
+.legitimacy-toggle.active {
+  background-color: #42b883;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.legitimacy-toggle.active .toggle-slider {
+  transform: translateX(24px);
+}

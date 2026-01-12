@@ -35,8 +35,16 @@ async function startServer() {
   // -------------------------
   try {
     console.log("🔌 Connecting to MongoDB...");
-    const client = new MongoClient(process.env.MONGO_URI);
-    await client.connect();
+    const client = new MongoClient(process.env.MONGO_URI || "mongodb://localhost:27017/facebook_mock", {
+      serverSelectionTimeoutMS: 3000, // Timeout after 3 seconds
+      connectTimeoutMS: 3000,
+    });
+    await Promise.race([
+      client.connect(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("MongoDB connection timeout")), 3000)
+      )
+    ]);
     console.log("✅ Connected to MongoDB");
 
     const db = client.db("facebook_mock");
@@ -45,7 +53,7 @@ async function startServer() {
     userStatsStore.init(db);
 
   } catch (err) {
-    console.error("❌ MongoDB connection failed:", err);
+    console.error("❌ MongoDB connection failed (continuing without MongoDB):", err.message);
   }
 
   // -------------------------

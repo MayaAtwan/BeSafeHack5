@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useFeed } from '../hooks/useFeed';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Post from './Post';
+import { getPostsLegitimacyMap } from '../utils/postLegitimacy';
 import './Feed.css';
 
 function Feed() {
   const { posts, loading, error, hasMore, loadMore } = useFeed();
   const lastPostElementRef = useInfiniteScroll(loadMore, hasMore, loading);
+  const [exposeLegitimacy, setExposeLegitimacy] = useState(false);
+  
+  const postsLegitimacyMap = useMemo(() => {
+    return getPostsLegitimacyMap(posts);
+  }, [posts]);
 
   if (error) {
     return (
@@ -19,6 +25,27 @@ function Feed() {
 
   return (
     <div className="feed">
+      <div className="feed-controls">
+        <label className="legitimacy-toggle-wrapper">
+          <span className="toggle-label">חשוף אם פוסטים לגיטימיים</span>
+          <div 
+            className={`legitimacy-toggle ${exposeLegitimacy ? 'active' : ''}`}
+            onClick={() => setExposeLegitimacy(!exposeLegitimacy)}
+            role="switch"
+            aria-checked={exposeLegitimacy}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setExposeLegitimacy(!exposeLegitimacy);
+              }
+            }}
+          >
+            <div className="toggle-slider"></div>
+          </div>
+        </label>
+      </div>
+
       {posts.length === 0 && !loading && (
         <div className="feed-empty">
           <p>אין פוסטים להצגה</p>
@@ -30,7 +57,11 @@ function Feed() {
           key={post.id}
           ref={index === posts.length - 1 ? lastPostElementRef : null}
         >
-          <Post post={post} />
+          <Post 
+            post={post} 
+            exposeLegitimacy={exposeLegitimacy}
+            isLegit={postsLegitimacyMap[post.id]}
+          />
         </div>
       ))}
 

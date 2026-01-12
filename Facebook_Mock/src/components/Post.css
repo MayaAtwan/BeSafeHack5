@@ -93,4 +93,13 @@
 .post-action-btn:hover {
   background-color: #f0f2f5;
 }
+
+.post-legit {
+  border: 3px solid #42b883;
+  background-color: #f0fdf4;
+}
+
+.post-not-legit {
+  border: 3px solid #ef4444;
+  background-color: #fef2f2;
 }
