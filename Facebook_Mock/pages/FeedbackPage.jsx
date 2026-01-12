@@ -5,53 +5,56 @@ import UserWarningCard from "../src/components/UserWarningCard";
 import { useEffect, useState } from "react";
 
 function FeedbackPage() {
-  //Mock data
 
-        const categoriesData = [
-    {
-        category: "Violence",
-        value: 32,
-        color: "#ff4afcff",
-    },
-    {
-        category: "Hate Speech",
-        value: 21,
-        color: "#f68fffff",
-    },
-    {
-        category: "Spam",
-        value: 15,
-        color: "#aa519bff",
-    },
-    {
-        category: "Misinformation",
-        value: 12,
-        color: "#db39bbff",
-    },
-    ];
     // fetch from api
   const [harmfulCount, setHarmfulCount] = useState(0);
   const [positiveCount, setPositiveCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const userId = "u1";
+  const [categoriesData, setCategoriesData] = useState([]);
 
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const res = await fetch(`http://localhost:3000/dashboard/${userId}`);
-        const data = await res.json();
+    // colors for each category
+    const CATEGORY_COLORS = {
+  "אלימות": "#ff4afcff",
+  "שפה פוגענית": "#f68fffff",
+  "בריונות / השפלה": "#aa519bff",
+  "הטרדה / איום": "#db39bbff",
+  "לחץ חברתי / התמכרות": "#ff7a45",
+  "עידוד להתנהגות מסוכנת": "#ffcc00",
+  "אחר (שלילי)": "#999999",
+  "דימוי גוף שלילי": "#ff6f91",
+};
 
-        setHarmfulCount(data.harmfulCount);
-        setPositiveCount(data.positiveCount);
-      } catch (err) {
-        console.error("Failed to fetch dashboard stats", err);
-      } finally {
-        setLoading(false);
-      }
+useEffect(() => {
+  async function fetchStats() {
+    try {
+      const res = await fetch(`http://localhost:3000/dashboard/${userId}`);
+      const data = await res.json();
+
+      setHarmfulCount(data.harmfulCount);
+      setPositiveCount(data.positiveCount);
+
+      const labelsMap = data.labelsCount || {};
+
+      const categoriesArray = Object.entries(labelsMap).map(
+        ([category, value]) => ({
+          category,
+          value,
+          color: CATEGORY_COLORS[category] || "#cccccc",
+        })
+      );
+
+      setCategoriesData(categoriesArray);
+    } catch (err) {
+      console.error("Failed to fetch dashboard stats", err);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    fetchStats();
-  }, [userId]);
+  fetchStats();
+}, [userId]);
+
 
   if (loading) return <p>Loading...</p>;
 
@@ -59,6 +62,9 @@ function FeedbackPage() {
     { label: "Positive", value: positiveCount, color: "#29c54dff" },
     { label: "Negative", value: harmfulCount, color: "#db1d40ff" },
     ];
+
+
+
 
   return (
     <div style={styles.page }>
@@ -69,7 +75,9 @@ function FeedbackPage() {
         </div>
 
         <h3 style={{textAlign: "center"}}>What Kind of Harmful Content Appears in Your Feed</h3>    
-        <ContentCategoryBarChart data={categoriesData} />
+        {categoriesData.length > 0 && (
+          <ContentCategoryBarChart data={categoriesData} />
+        )}
         <UserWarningCard username={"Sharon Levi"} />
 
     </div>
