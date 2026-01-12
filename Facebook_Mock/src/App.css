@@ -127,3 +127,75 @@
     max-width: 100%;
   }
 }
+
+/*feedback button style */
+/*
+.feedback-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 680px; 
+  padding: 0 12px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.feedback-button-container .feedback-button {
+  margin-left: auto; 
+}
+
+.feedback-button-container .toggle-wrapper {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+*/
+
+
+/* feedback + toggle shared container */
+.feedback-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 680px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+}
+
+
+.floatingToggle {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 680px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+/* feedback stays at START */
+/*
+.feedback-button-container .feedback-button {
+  margin: 0;
+}
+
+.feedback-button-container .toggle-wrapper {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+*/

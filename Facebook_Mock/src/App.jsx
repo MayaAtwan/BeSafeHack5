@@ -3,10 +3,18 @@ import { AiFillHome } from 'react-icons/ai';
 import { MdOndemandVideo, MdGroups } from 'react-icons/md';
 import Feed from './components/Feed';
 import './App.css';
+import FeedbackButton from './components/FeedbackButton';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import FeedbackPage from '../pages/FeedbackPage'
+import FloatingToggle from './components/FloatingToggle';
 
 function App() {
+  const location = useLocation();
+  const isFeedbackPage = location.pathname === '/feedback';
+
   return (
     <div className="app">
+      {!isFeedbackPage && (
       <header className="app-header">
         <div className="header-content">
           <div className="header-left">
@@ -28,11 +36,32 @@ function App() {
           </div>
         </div>
       </header>
+        )}
+
       <main className="app-main">
         <div className="app-main-inner">
           <aside className="app-main-side" aria-hidden="true" />
           <section className="app-main-center">
-            <Feed />
+
+            <Routes>
+              <Route path="/" element={<Feed />} />
+              <Route path="/feedback" element={<FeedbackPage />} />
+            </Routes>
+            
+            {!isFeedbackPage && (
+            <div className="feedback-button-container">
+              <FeedbackButton />
+            </div>
+            
+            )}
+
+
+            {isFeedbackPage && (
+              <div className="floatingToggle">
+                <FloatingToggle />
+              </div>
+            )}
+
           </section>
           <aside className="app-main-side" aria-hidden="true" />
         </div>
