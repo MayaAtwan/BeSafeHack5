@@ -2,15 +2,10 @@ import ContentCategoryBarChart from "../src/components/ContentCategoryBarChart";
 import FeedbackHeader from "../src/components/FeedbackHeader";
 import SentimentPieChart from "../src/components/SentimentPieChart";
 import UserWarningCard from "../src/components/UserWarningCard";
+import { useEffect, useState } from "react";
 
 function FeedbackPage() {
-    const positiveCount = 120;
-    const negativeCount = 45;
-
-    const sentimentData = [
-    { label: "Positive", value: positiveCount, color: "#29c54dff" },
-    { label: "Negative", value: negativeCount, color: "#db1d40ff" },
-    ];
+  //Mock data
 
         const categoriesData = [
     {
@@ -33,6 +28,36 @@ function FeedbackPage() {
         value: 12,
         color: "#db39bbff",
     },
+    ];
+    // fetch from api
+  const [harmfulCount, setHarmfulCount] = useState(0);
+  const [positiveCount, setPositiveCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const userId = "u1";
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const res = await fetch(`http://localhost:3000/dashboard/${userId}`);
+        const data = await res.json();
+
+        setHarmfulCount(data.harmfulCount);
+        setPositiveCount(data.positiveCount);
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchStats();
+  }, [userId]);
+
+  if (loading) return <p>Loading...</p>;
+
+    const sentimentData = [
+    { label: "Positive", value: positiveCount, color: "#29c54dff" },
+    { label: "Negative", value: harmfulCount, color: "#db1d40ff" },
     ];
 
   return (
