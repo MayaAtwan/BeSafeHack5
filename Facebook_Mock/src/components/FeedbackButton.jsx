@@ -11,7 +11,7 @@ function FeedbackButton() {
       className="floating-feedback-button"
       type="button"
       aria-label="Feedback"
-      onClick={() => {window.open('/feedback', '_blank', 'noopener,noreferrer');}}
+      onClick={() => navigate('/feedback')}
     >
       <img
         className="floating-feedback-icon"
