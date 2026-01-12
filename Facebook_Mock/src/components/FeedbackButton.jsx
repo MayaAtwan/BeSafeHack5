@@ -3,6 +3,8 @@ import React from 'react';
 import icon from '../../imges/button.png'
 import './FeedbackButton.css';
 import { useNavigate } from 'react-router-dom';
+import beSafeIcon from '../../imges/beSafe.png'
+
 
 function FeedbackButton() {
     const navigate = useNavigate();
@@ -15,7 +17,7 @@ function FeedbackButton() {
     >
       <img
         className="floating-feedback-icon"
-        src={icon}
+        src={beSafeIcon}
         alt="Feedback"
       />
     </button>

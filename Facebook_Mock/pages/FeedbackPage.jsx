@@ -1,6 +1,7 @@
 import ContentCategoryBarChart from "../src/components/ContentCategoryBarChart";
 import FeedbackHeader from "../src/components/FeedbackHeader";
 import SentimentPieChart from "../src/components/SentimentPieChart";
+import UserWarningCard from "../src/components/UserWarningCard";
 
 function FeedbackPage() {
     const positiveCount = 120;
@@ -44,6 +45,7 @@ function FeedbackPage() {
 
         <h3 style={{textAlign: "center"}}>What Kind of Harmful Content Appears in Your Feed</h3>    
         <ContentCategoryBarChart data={categoriesData} />
+        <UserWarningCard username={"Sharon Levi"} />
 
     </div>
   );
