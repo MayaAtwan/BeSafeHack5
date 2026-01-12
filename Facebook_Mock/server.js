@@ -5,6 +5,8 @@ const path = require('path');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const eventStore = require('./server-data/eventStore');
+const postAnalyticsStore = require('./server-data/postAnalyticsStore');
+const userStatsStore = require('./server-data/userStatsStore');
 
 async function startServer() {
   const app = express();
@@ -33,14 +35,25 @@ async function startServer() {
   // -------------------------
   try {
     console.log("🔌 Connecting to MongoDB...");
-    const client = new MongoClient(process.env.MONGO_URI);
-    await client.connect();
+    const client = new MongoClient(process.env.MONGO_URI || "mongodb://localhost:27017/facebook_mock", {
+      serverSelectionTimeoutMS: 3000, // Timeout after 3 seconds
+      connectTimeoutMS: 3000,
+    });
+    await Promise.race([
+      client.connect(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("MongoDB connection timeout")), 3000)
+      )
+    ]);
     console.log("✅ Connected to MongoDB");
 
     const db = client.db("facebook_mock");
     eventStore.init(db);
+    postAnalyticsStore.init(db);
+    userStatsStore.init(db);
+
   } catch (err) {
-    console.error("❌ MongoDB connection failed:", err);
+    console.error("❌ MongoDB connection failed (continuing without MongoDB):", err.message);
   }
 
   // -------------------------
@@ -157,7 +170,7 @@ async function startServer() {
       });
     }
 
-    await eventStore.saveEvent(event);
+    await eventStore.eventLogic(event);
 
     return res.status(201).json({ success: true });
   });
@@ -173,6 +186,44 @@ async function startServer() {
     } catch (err) {
       console.error("❌ Failed to fetch events:", err);
       res.status(500).json({ error: "Failed to fetch events" });
+    }
+  });
+
+  app.get('/analytics', async (req, res) => {
+    try {
+      const analytics = await postAnalyticsStore.getAllAnalytics();
+      res.json({ data: analytics });
+    } catch (err) {
+      console.error("❌ Failed to fetch analytics:", err);
+      res.status(500).json({ error: "Failed to fetch analytics" });
+    }
+  });
+
+    /**
+   * GET /dashboard/:userId
+   * Returns stats for a specific user
+   */
+  app.get('/dashboard/:userId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      const stats = await userStatsStore.getStats(userId);
+
+      if (!stats) {
+        return res.status(404).json({ error: "No stats found for this user" });
+      }
+
+      res.json({
+        userId: stats.userId,
+        totalEvents: stats.totalEvents,
+        harmfulCount: stats.harmfulCount,
+        positiveCount: stats.positiveCount,
+        labelsCount: stats.labelsCount,
+        updatedAt: stats.updatedAt
+      });
+    } catch (err) {
+      console.error("❌ Failed to fetch dashboard stats:", err);
+      res.status(500).json({ error: "Server error" });
     }
   });
 

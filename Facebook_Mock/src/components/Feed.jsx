@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useFeed } from '../hooks/useFeed';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Post from './Post';
+import { getPostsLegitimacyMap } from '../utils/postLegitimacy';
 import './Feed.css';
 
 function Feed() {
   const { posts, loading, error, hasMore, loadMore } = useFeed();
   const lastPostElementRef = useInfiniteScroll(loadMore, hasMore, loading);
+  const [exposeLegitimacy, setExposeLegitimacy] = useState(false);
+  
+  const postsLegitimacyMap = useMemo(() => {
+    return getPostsLegitimacyMap(posts);
+  }, [posts]);
 
   if (error) {
     return (
@@ -30,7 +36,11 @@ function Feed() {
           key={post.id}
           ref={index === posts.length - 1 ? lastPostElementRef : null}
         >
-          <Post post={post} />
+          <Post 
+            post={post} 
+            exposeLegitimacy={exposeLegitimacy}
+            isLegit={postsLegitimacyMap[post.id]}
+          />
         </div>
       ))}
 

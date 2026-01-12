@@ -5,7 +5,7 @@ import Comments from './Comments';
 import { formatPostTime } from '../utils/dateUtils';
 import './Post.css';
 
-function Post({ post }) {
+function Post({ post, exposeLegitimacy = false, isLegit = true }) {
   const {
     id,
     message,
@@ -144,8 +144,14 @@ function Post({ post }) {
   const likeCount = Math.max(1, commentCount * 3 + 8);
   const shareCount = Math.max(0, Math.floor(commentCount / 2));
 
+  const postClassName = `post ${
+    localStorage.getItem("exposeLegitimacy") === "ON"
+      ? (isLegit ? 'post-legit' : 'post-not-legit')
+      : ''
+  }`;
+
   return (
-    <article className="post" ref={postRef}>
+    <article className={postClassName} ref={postRef}>
       <div className="post-header">
         <div className="post-header-info">
           <UserAvatar name={from?.name || 'Unknown'} />
