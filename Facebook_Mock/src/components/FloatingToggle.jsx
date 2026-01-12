@@ -1,7 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function FloatingToggle() {
   const [enabled, setEnabled] = useState(false);
+
+  // Load value from localStorage on mount
+  useEffect(() => {
+    const savedValue = localStorage.getItem("exposeLegitimacy");
+    if (savedValue !== null) {
+      setEnabled(savedValue === "ON");
+    }
+  }, []);
+
+  const handleToggle = () => {
+    const newValue = !enabled;
+    setEnabled(newValue);
+    localStorage.setItem("exposeLegitimacy", newValue ? "ON" : "OFF");
+  };
 
   return (
     <div style={styles.container}>
@@ -13,7 +27,7 @@ export default function FloatingToggle() {
         <input
           type="checkbox"
           checked={enabled}
-          onChange={() => setEnabled(!enabled)}
+          onChange={handleToggle}
         />
         <span style={styles.slider}></span>
       </label>
