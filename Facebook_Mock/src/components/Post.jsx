@@ -145,7 +145,7 @@ function Post({ post, exposeLegitimacy = false, isLegit = true }) {
   const shareCount = Math.max(0, Math.floor(commentCount / 2));
 
   const postClassName = `post ${
-    exposeLegitimacy 
+    localStorage.getItem("exposeLegitimacy") === "ON"
       ? (isLegit ? 'post-legit' : 'post-not-legit')
       : ''
   }`;

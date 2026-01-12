@@ -25,27 +25,6 @@ function Feed() {
 
   return (
     <div className="feed">
-      <div className="feed-controls">
-        <label className="legitimacy-toggle-wrapper">
-          <span className="toggle-label">חשוף אם פוסטים לגיטימיים</span>
-          <div 
-            className={`legitimacy-toggle ${exposeLegitimacy ? 'active' : ''}`}
-            onClick={() => setExposeLegitimacy(!exposeLegitimacy)}
-            role="switch"
-            aria-checked={exposeLegitimacy}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setExposeLegitimacy(!exposeLegitimacy);
-              }
-            }}
-          >
-            <div className="toggle-slider"></div>
-          </div>
-        </label>
-      </div>
-
       {posts.length === 0 && !loading && (
         <div className="feed-empty">
           <p>אין פוסטים להצגה</p>

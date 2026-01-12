@@ -5,8 +5,10 @@
 
 // Array of post IDs that are NOT legit (fake/misleading posts)
 const NOT_LEGIT_POST_IDS = [
-  '2015_9015', // Example: post about gaming
-  // Add more post IDs here as needed
+  '2015_9015', 
+  '2011_9011',
+  '2018_9018',
+  '2012_9012',
 ];
 
 /**
