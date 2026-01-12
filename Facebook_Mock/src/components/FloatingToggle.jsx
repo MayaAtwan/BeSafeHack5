@@ -7,7 +7,7 @@ export default function FloatingToggle() {
   useEffect(() => {
     const savedValue = localStorage.getItem("exposeLegitimacy");
     if (savedValue !== null) {
-      setEnabled(savedValue === "ON");
+      setEnabled(savedValue === "OFF");
     }
   }, []);
 
