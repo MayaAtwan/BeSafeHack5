@@ -18,10 +18,10 @@ function FeedbackPage() {
   "אלימות": "#ff4afcff",
   "שפה פוגענית": "#f68fffff",
   "בריונות / השפלה": "#aa519bff",
-  "הטרדה / איום": "#db39bbff",
-  "לחץ חברתי / התמכרות": "#ff7a45",
-  "עידוד להתנהגות מסוכנת": "#ffcc00",
-  "אחר (שלילי)": "#999999",
+  "הדרה חברתית": "#db39bbff",
+  "לחץ חברתי / השוואתיות": "#e54f13ff",
+  "עידוד התנהגות מסוכנת": "#ffcc00",
+  "אחר (שלילי)": "#b63636ff",
   "דימוי גוף שלילי": "#ff6f91",
 };
 
@@ -78,7 +78,7 @@ useEffect(() => {
         {categoriesData.length > 0 && (
           <ContentCategoryBarChart data={categoriesData} />
         )}
-        <UserWarningCard username={"Sharon Levi"} />
+        <UserWarningCard username={"שקד לוי"} />
 
     </div>
   );
