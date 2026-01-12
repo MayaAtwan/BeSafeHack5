@@ -6,6 +6,7 @@ import './App.css';
 import FeedbackButton from './components/FeedbackButton';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import FeedbackPage from '../pages/FeedbackPage'
+import FloatingToggle from './components/FloatingToggle';
 
 function App() {
   const location = useLocation();
@@ -51,8 +52,15 @@ function App() {
             <div className="feedback-button-container">
               <FeedbackButton />
             </div>
+            
             )}
 
+
+            {isFeedbackPage && (
+              <div className="floatingToggle">
+                <FloatingToggle />
+              </div>
+            )}
 
           </section>
           <aside className="app-main-side" aria-hidden="true" />
